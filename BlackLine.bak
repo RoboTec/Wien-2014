@@ -1,0 +1,41 @@
+/* BlackLine */
+
+#include "functions.h"
+
+task main()
+{
+     InitSensors();
+     GreenAttempts = 0;
+     DownFloor = true;
+     while(true)
+     {
+                     SpeedLeft = SpeedNorm;
+                     SpeedRight = SpeedNorm;
+                     CheckGreen();
+                     if(SENSOR_2 < Schwarzwert)
+                     {
+                              TurnRight();
+                     }
+                     if((SENSOR_3 < Schwarzwert) && (ReturnSensorTime() > stime))
+                     {
+                              TurnLeft();
+                     }
+                     if((time > 1500) && (ReturnSensorTime() > stime))
+                     {
+                              if(DirectionRight == true)
+                              {
+                                  SpeedLeft = 50;
+                                  SpeedRight = 30;
+                              }
+                              else
+                              {
+                                  SpeedLeft = 30;
+                                  SpeedRight = 50;
+                              }
+                     }
+                     OnFwd(OUT_B, SpeedLeft);
+                     OnFwd(OUT_C, SpeedRight);
+                     Wait(1);
+                     Off(OUT_BC);
+     }
+}
