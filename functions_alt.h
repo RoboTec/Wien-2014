@@ -2,12 +2,10 @@
 
 #define SpeedNorm 100
 #define Schwarzwert 50
-#define greenTime 2000
+#define stime 2000
 
 //Variablen
 long intzeroval;
-byte gemachteSchleifenaufgaben;
-//long winkelTime;
 int GreenAttempts;
 int time;
 bool DownFloor;
@@ -16,19 +14,6 @@ bool DirectionRight;
 byte SpeedLeft;
 byte SpeedRight;
 long sensorTime;
-
-//void StartWinkel()
-//{
-//	winkelTime = CurrentTick();
-//}
-
-//int ReturnWinkel()
-//{
-	//return(CurrentTick() - winkelTime);
-//}
-
-
-
 
 void InitSensors()
 {
@@ -63,9 +48,6 @@ void TurnRight()
      SpeedLeft = -70;
      SpeedRight = 80;
      DirectionRight = true;
-	 StartTiming();
-	 //StartWinkel();
-	 gemachteSchleifenaufgaben +=1;
 }
 
 void TurnLeft()
@@ -73,9 +55,6 @@ void TurnLeft()
      SpeedLeft = 80;
      SpeedRight = -70;
      DirectionRight = false;
-	 StartTiming();
-	 //StartWinkel();
-	 gemachteSchleifenaufgaben +=1;
 }
 
 void StartGreenLine()
