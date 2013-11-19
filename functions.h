@@ -1,13 +1,14 @@
 #include "NXCDefs.h"
+#include "HTSMUX-driver.h"
 
+/*---Konstanten---*/
 #define SpeedNorm 100
 #define Schwarzwert 50
 #define greenTime 2000
 
-//Variablen
+/*---Variablen---*/
 long intzeroval;
 byte gemachteSchleifenaufgaben;
-//long winkelTime;
 int GreenAttempts;
 int time;
 bool DownFloor;
@@ -16,29 +17,25 @@ bool DirectionRight;
 byte SpeedLeft;
 byte SpeedRight;
 long sensorTime;
+//Ultraschall-Test
+byte distance;
 
-//void StartWinkel()
-//{
-//	winkelTime = CurrentTick();
-//}
-
-//int ReturnWinkel()
-//{
-	//return(CurrentTick() - winkelTime);
-//}
-
-
-
-
+/*---Funktionen---*/
 void InitSensors()
 {
-     SetSensorTouch(IN_1);
+     SetSensor(S1, SENSOR_LOWSPEED);
      SetSensorLight(IN_2);
      SetSensorLight(IN_3);
 	 SetSensorColorFull(IN_4);
-
+	 if(!HTSMUXscanPorts(S1))
+	 {
+		 TextOut(0, LCD_LINE1, "Scan failed!");
+		 Wait(1000);
+	 }
+	 smuxSetSensorLegoTouch(msensor_S1_4);
+	 smuxSensorLegoUS(msensor_S1_1);
 }
-
+ 
 void StartTiming()
 {
      intzeroval = CurrentTick();
@@ -64,7 +61,6 @@ void TurnRight()
      SpeedRight = 80;
      DirectionRight = true;
 	 StartTiming();
-	 //StartWinkel();
 	 gemachteSchleifenaufgaben +=1;
 }
 
@@ -74,7 +70,6 @@ void TurnLeft()
      SpeedRight = -70;
      DirectionRight = false;
 	 StartTiming();
-	 //StartWinkel();
 	 gemachteSchleifenaufgaben +=1;
 }
 
@@ -89,7 +84,7 @@ void CheckGreen()
      switch(color)
      {
          case 3:
-              PlayTone(3000, 20);
+              PlayTone(3000, 30);
 
               GreenAttempts += 1;
               if(GreenAttempts > 8)
@@ -102,6 +97,75 @@ void CheckGreen()
               GreenAttempts = 0;
          break;
      }
+}
+
+void GreenAndWinkel()
+{
+	PlayTone(1000,20);
+    GreenAttempts=0;
+    OnFwd(OUT_C,70);
+    Off(OUT_B);
+    Wait(200);
+    repeat(30)
+    {
+		OnRev(OUT_BC,70);
+        Wait(10);
+        if(SENSOR_4 == 3)
+        {
+			GreenAttempts = GreenAttempts + 1;
+        }
+    }
+    repeat(30)
+    {
+		OnRev(OUT_B,70);
+        Off(OUT_C);
+        Wait(15);
+        if(SENSOR_4 == 3)
+        {
+			GreenAttempts = GreenAttempts + 1;
+        }
+    }
+    repeat(30)
+    {
+		OnFwd(OUT_BC,70);
+        Wait(10);
+        if(SENSOR_4 == 3)
+        {
+			GreenAttempts = GreenAttempts + 1;
+        }
+    }
+    repeat(20)
+    {
+		OnRev(OUT_C,70);
+        Off(OUT_B);
+        Wait(15);
+        if(SENSOR_4 == 3)
+        {
+			GreenAttempts = GreenAttempts + 1;
+        }
+    }
+    OnRev(OUT_BC,70);
+    Wait(400);
+	if(GreenAttempts > 11)
+    {
+		PlayTone(3000, 20);
+        if(DirectionRight == true)
+	    {
+			OnFwd(OUT_C, 70);
+			OnRev(OUT_B, 30);
+        }
+		else
+        {
+	        OnFwd(OUT_B, 70);
+            OnRev(OUT_C, 30);
+        }
+		Wait(200);
+		Off(OUT_BC);
+    }
+    else
+    {
+		StartGreenLine();
+    }
 }
 
 long ReturnSensorTime()
