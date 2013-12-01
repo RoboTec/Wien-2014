@@ -2,7 +2,7 @@
 #include "HTSMUX-driver.h"
 
 /*---Konstanten---*/
-#define SpeedNorm 100
+#define SpeedNorm 85
 #define Schwarzwert 50
 #define greenTime 2000
 
@@ -17,6 +17,7 @@ bool DirectionRight;
 byte SpeedLeft;
 byte SpeedRight;
 long sensorTime;
+bool InTurn;
 //Ultraschall-Test
 byte distance;
 
@@ -57,18 +58,20 @@ long ReturnTime()
 
 void TurnRight()
 {
-     SpeedLeft = -70;
-     SpeedRight = 80;
+     SpeedLeft = -100;
+     SpeedRight = 100;
      DirectionRight = true;
+	 InTurn = true;
 	 StartTiming();
 	 gemachteSchleifenaufgaben +=1;
 }
 
 void TurnLeft()
 {
-     SpeedLeft = 80;
-     SpeedRight = -70;
+     SpeedLeft = 100;
+     SpeedRight = -100;
      DirectionRight = false;
+	 InTurn = true;
 	 StartTiming();
 	 gemachteSchleifenaufgaben +=1;
 }
