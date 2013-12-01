@@ -6,8 +6,8 @@ task main()
 {    InitSensors();
      StartTiming();
      GreenAttempts = 0;
-     DownFloor = true;
-     while(true)
+     DownFloor = false;
+     while(DownFloor)
      {
                      gemachteSchleifenaufgaben=0;
                      SpeedLeft = SpeedNorm;
@@ -22,31 +22,43 @@ task main()
                      {
                               TurnLeft();
                      }
-                     if((time > 800) && (ReturnSensorTime() > greenTime))
+                     if((time > 1300) && (ReturnSensorTime() > greenTime))
                      {
                               if(DirectionRight == false)
                               {
-                                  SpeedLeft = 60;
-                                  SpeedRight = 20;
+                                  SpeedLeft = 30;
+                                  SpeedRight = 50;
                               }
                               else
                               {
-                                  SpeedLeft = 20;
-                                  SpeedRight = 60;
+                                  SpeedLeft = 50;
+                                  SpeedRight = 30;
                               }
                      }
                      if(gemachteSchleifenaufgaben > 1)
                      {
                               GreenAndWinkel();
                      }
+                     OnFwd(OUT_A, 40);
                      OnFwd(OUT_B, SpeedLeft);
                      OnFwd(OUT_C, SpeedRight);
-                     Wait(10);
-                     Off(OUT_BC);
-                     //Ultraschall-Test
-                     distance = smuxSensorLegoUS(msensor_S1_1);
-                     TextOut(0, LCD_LINE2, "DISTANCE:", true);
-                     NumOut(0, LCD_LINE3, distance);
+                     if(InTurn)
+                     {
+                               Wait(30);
+                     } else
+                     {
+                               Wait(5);
+                     }
+                     Off(OUT_ABC);
+                     InTurn = false;
+     }
+     while(!DownFloor)
+     {
+                      OnFwd(OUT_A, 40);
+                      OnFwd(OUT_BC, 80);
+                      Wait(1);
+                      //OnFwd(OUT_A, 95);
+                      //Wait(1);
      }
 }
 
