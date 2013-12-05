@@ -84,90 +84,73 @@ void StartGreenLine()
 void CheckGreen()
 {
      int color = SENSOR_4;
-     switch(color)
-     {
-         case 3:
-              PlayTone(3000, 30);
+     repeat(3)
+	 {
+		switch(color)
+		{
+			case 3:
+				PlayTone(3000, 30);
 
-              GreenAttempts += 1;
-              if(GreenAttempts > 8)
-              {
-                  StartGreenLine();
-              }
+				GreenAttempts++;
+				if(GreenAttempts > 8)
+				{
+					StartGreenLine();
+				}
 
-         break;
-         default:
-              GreenAttempts = 0;
-         break;
-     }
+			break;
+			default:
+				GreenAttempts = 0;
+			break;
+		}
+	 }
 }
-
 void GreenAndWinkel()
 {
 	PlayTone(1000,20);
     GreenAttempts=0;
-    OnFwd(OUT_C,70);
-    Off(OUT_B);
-    Wait(200);
     repeat(30)
     {
-		OnRev(OUT_BC,70);
-        Wait(10);
-        if(SENSOR_4 == 3)
-        {
-			GreenAttempts = GreenAttempts + 1;
-        }
-    }
-    repeat(30)
-    {
-		OnRev(OUT_B,70);
-        Off(OUT_C);
-        Wait(15);
-        if(SENSOR_4 == 3)
-        {
-			GreenAttempts = GreenAttempts + 1;
-        }
-    }
-    repeat(30)
-    {
-		OnFwd(OUT_BC,70);
-        Wait(10);
-        if(SENSOR_4 == 3)
-        {
-			GreenAttempts = GreenAttempts + 1;
-        }
-    }
-    repeat(20)
-    {
+		OnFwd(OUT_B,70);
 		OnRev(OUT_C,70);
-        Off(OUT_B);
-        Wait(15);
+        Wait(10);
         if(SENSOR_4 == 3)
         {
-			GreenAttempts = GreenAttempts + 1;
+			GreenAttempts++;
         }
     }
-    OnRev(OUT_BC,70);
-    Wait(400);
-	if(GreenAttempts > 11)
+    repeat(60)
+    {
+		OnFwd(OUT_C,70);
+		OnRev(OUT_B,70);
+        Wait(10);
+        if(SENSOR_4 == 3)
+        {
+			GreenAttempts++;
+        }
+    }
+    repeat(30)
+    {
+		OnFwd(OUT_B,70);
+		OnRev(OUT_C,70);
+        Wait(10);
+        if(SENSOR_4 == 3)
+        {
+			GreenAttempts++;
+        }
+    }
+    repeat(40)
+	{
+		OnRev(OUT_BC,70);
+		Wait(10);
+		if(SENSOR_4 == 3)
+		{
+			GreenAttempts++;
+		}
+	}
+	if(GreenAttempts > 10)
     {
 		PlayTone(3000, 20);
-        if(DirectionRight == true)
-	    {
-			OnFwd(OUT_C, 70);
-			OnRev(OUT_B, 30);
-        }
-		else
-        {
-	        OnFwd(OUT_B, 70);
-            OnRev(OUT_C, 30);
-        }
-		Wait(200);
-		Off(OUT_BC);
-    }
-    else
-    {
-		StartGreenLine();
+        StartGreenLine();
     }
 }
 

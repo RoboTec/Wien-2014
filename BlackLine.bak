@@ -6,14 +6,13 @@ task main()
 {    InitSensors();
      StartTiming();
      GreenAttempts = 0;
-     DownFloor = false;
+     DownFloor = true;
      while(DownFloor)
      {
                      gemachteSchleifenaufgaben=0;
                      SpeedLeft = SpeedNorm;
                      SpeedRight = SpeedNorm;
                      CheckGreen();
-                     time = ReturnTime();
                       if(SENSOR_2 < Schwarzwert)
                      {
                               TurnRight();
@@ -22,7 +21,7 @@ task main()
                      {
                               TurnLeft();
                      }
-                     if((time > 1300) && (ReturnSensorTime() > greenTime))
+                     if((ReturnTime() > 1300) && (ReturnSensorTime() > greenTime))
                      {
                               if(DirectionRight == false)
                               {
@@ -35,10 +34,10 @@ task main()
                                   SpeedRight = 30;
                               }
                      }
-                     if(gemachteSchleifenaufgaben > 1)
+                     /*if(gemachteSchleifenaufgaben > 1)
                      {
                               GreenAndWinkel();
-                     }
+                     }*/
                      OnFwd(OUT_A, 40);
                      OnFwd(OUT_B, SpeedLeft);
                      OnFwd(OUT_C, SpeedRight);
